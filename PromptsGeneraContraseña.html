@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Contraseñas Seguras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+    <div class="container mx-auto max-w-md p-6 bg-gray-800 rounded-2xl shadow-lg text-center">
+        <h1 class="text-2xl font-bold mb-4">Generador de Contraseñas</h1>
+        <p class="text-sm text-gray-400 mb-4">Autentícate con huella digital para generar una contraseña segura</p>
+        <button id="authBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Autenticarse</button>
+        <div id="passwordContainer" class="hidden mt-4">
+            <input type="text" id="password" class="w-full p-2 text-center rounded bg-gray-700 text-white" readonly>
+            <div class="flex justify-between mt-2">
+                <button id="generateBtn" class="bg-green-500 px-4 py-2 rounded hover:bg-green-600">Generar</button>
+                <button id="copyBtn" class="bg-gray-500 px-4 py-2 rounded hover:bg-gray-600">Copiar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const authBtn = document.getElementById("authBtn");
+            const passwordContainer = document.getElementById("passwordContainer");
+            const passwordField = document.getElementById("password");
+            const generateBtn = document.getElementById("generateBtn");
+            const copyBtn = document.getElementById("copyBtn");
+
+            authBtn.addEventListener("click", async () => {
+                try {
+                    // Simulación de autenticación biométrica
+                    if (window.PublicKeyCredential) {
+                        alert("Autenticación exitosa");
+                        passwordContainer.classList.remove("hidden");
+                        gsap.from(passwordContainer, { opacity: 0, y: -20, duration: 0.5 });
+                    } else {
+                        alert("Tu navegador no soporta autenticación biométrica");
+                    }
+                } catch (error) {
+                    console.error("Error en autenticación", error);
+                }
+            });
+
+            generateBtn.addEventListener("click", () => {
+                const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+                let password = "";
+                for (let i = 0; i < 16; i++) {
+                    password += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                passwordField.value = password;
+                gsap.from(passwordField, { scale: 1.2, duration: 0.3 });
+            });
+
+            copyBtn.addEventListener("click", () => {
+                navigator.clipboard.writeText(passwordField.value).then(() => {
+                    alert("Contraseña copiada");
+                });
+            });
+        });
+    </script>
+</body>
+</html>
